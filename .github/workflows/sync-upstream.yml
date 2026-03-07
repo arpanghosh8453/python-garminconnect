@@ -1,0 +1,72 @@
+name: Sync Fork with Upstream
+
+on:
+  schedule:
+    - cron: '0 8 * * 1,4' # 07:00 UTC every Monday and Thursday
+  workflow_dispatch:   # Manual trigger button
+
+# --- SWAP THESE VARIABLES FOR OTHER REPOS ---
+env:
+  UPSTREAM_URL: "https://github.com/cyberjunky/python-garminconnect"
+  BRANCH_NAME: "master"
+# --------------------------------------------
+
+jobs:
+  sync_with_upstream:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Local Branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BRANCH_NAME }}
+          fetch-depth: 0
+
+      - name: Configure Git and Sync
+        id: sync_step
+        run: |
+          echo "Starting sync process for ${{ env.UPSTREAM_URL }}..."
+          
+          # 1. Setup Identity
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          # 2. Add Upstream Remote using variable
+          git remote add upstream ${{ env.UPSTREAM_URL }}
+          echo "Remote 'upstream' added successfully."
+
+          # 3. Fetch Upstream branch
+          echo "Fetching latest changes from upstream..."
+          git fetch upstream ${{ env.BRANCH_NAME }} --quiet
+
+          # 4. Check for changes
+          LOCAL_HASH=$(git rev-parse HEAD)
+          UPSTREAM_HASH=$(git rev-parse upstream/${{ env.BRANCH_NAME }})
+
+          if [ "$LOCAL_HASH" = "$UPSTREAM_HASH" ]; then
+            echo "Your fork is already up-to-date. Nothing to do."
+            echo "has_updates=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          echo "New commits detected. Attempting Fast-Forward merge..."
+          
+          # 5. Merge (Fast-Forward only)
+          if git merge upstream/${{ env.BRANCH_NAME }} --ff-only; then
+            echo "Successfully merged upstream into local ${{ env.BRANCH_NAME }}."
+            git push origin ${{ env.BRANCH_NAME }}
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+          else
+            echo "ERROR: Fast-Forward merge failed!"
+            echo "Manual intervention required to resolve conflicts."
+            exit 1
+          fi
+
+      - name: Summary of Changes
+        if: steps.sync_step.outputs.has_updates == 'true'
+        run: |
+          echo "Sync Summary:"
+          git log -n 5 --oneline --graph
+          echo "Completed at: $(date)"
