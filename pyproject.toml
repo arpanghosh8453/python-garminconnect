@@ -6,6 +6,7 @@ authors = [
     {name = "Ron Klinkien", email = "ron@cyberjunky.nl"},
 ]
 dependencies = [
+    "curl_cffi>=0.7.0",
     "requests",
 ]
 readme = "README.md"

@@ -1,0 +1,111 @@
+<!DOCTYPE html><html lang="en" class="no-js"><head>
+    <script type="text/javascript" src="/sso/js/jquery/3.7.1/jquery.min.js?20210319"></script>
+    <script type="text/javascript">jQuery.noConflict();</script>
+    <script type="text/javascript" src="/sso/js/jquery-validate/1.16.0/jquery.validate.min.js?20210319"></script>
+    <script type="text/javascript" src="/sso/js/base.js?20231020"></script>
+    <script type="text/javascript" src="/sso/js/jsUtils.js?20210406"></script>
+    <script type="text/javascript" src="/sso/js/json2.js"></script>
+    <script type="text/javascript" src="/sso/js/postmessage.js?20210319"></script>
+    <script type="text/javascript" src="/sso/js/consoleUtils.js?20210319"></script>
+    <script type="text/javascript" src="/sso/js/setupMfaRequiredView.js?20210319"></script>
+    <script type="text/javascript" src="/sso/js/enterMfaCode.js?20230127"></script>
+    <script type="text/javascript">
+        var embedWidget = "true";
+        if (embedWidget == "") {
+            embedWidget = "";
+        }
+        embedWidget = (embedWidget == "true");
+        var parent_url = "https:\/\/sso.garmin.com\/sso\/embed";
+        window.onload = function() {
+            ifrememberMyBrowserChecked();
+        };
+
+        jQuery(document).ready( function() {
+            if (!embedWidget) {
+                send({'gauthHeight': jQuery("#GAuth-component").height()});
+            }
+            jQuery("#mfa-verification-code-submit").click(function(){
+                if (!validateMfaCodeAndPrivacyConsents()){
+                    return false;
+                }
+                jQuery('#submit-mfa-verification-code-form').submit();
+                return false;
+            });
+        });
+        var customerGuid = "3c814e7a-0db1-41a4-bdb8-4944db6fb8b3";
+        var mfaMethod = "email";
+        var locale = "en_US";
+        var clientId = "GarminConnect";
+        var codeSentTo = "ro*@cyberjunky.nl";
+    </script>
+    <meta charset="utf-8">
+    <title>Enter MFA code for login</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="cleartype" content="on">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge;">
+    <link href="/sso/css/GAuth.css?20170505" rel="stylesheet" type="text/css" media="all">
+    <link rel="stylesheet" href="">
+</head>
+
+<body>
+    <div id="GAuth-component">
+        <h2 id="enter-mfa-code-h2">Enter security code</h2>
+        <input type="hidden" id="queryString" value="service=https%3A%2F%2Fsso.garmin.com%2Fsso%2Fembed&amp;source=https%3A%2F%2Fsso.garmin.com%2Fsso%2Fembed&amp;redirectAfterAccountLoginUrl=https%3A%2F%2Fsso.garmin.com%2Fsso%2Fembed&amp;redirectAfterAccountCreationUrl=https%3A%2F%2Fsso.garmin.com%2Fsso%2Fembed&amp;gauthHost=https%3A%2F%2Fsso.garmin.com%2Fsso&amp;locale=en_US&amp;id=gauth-widget&amp;clientId=GarminConnect&amp;rememberMeShown=false&amp;rememberMeChecked=false&amp;createAccountShown=true&amp;openCreateAccount=false&amp;displayNameShown=false&amp;consumeServiceTicket=true&amp;initialFocus=true&amp;embedWidget=true&amp;socialEnabled=false&amp;generateExtraServiceTicket=false&amp;generateTwoExtraServiceTickets=false&amp;generateNoServiceTicket=false&amp;globalOptInShown=false&amp;globalOptInChecked=false&amp;mobile=false&amp;connectLegalTerms=false&amp;showTermsOfUse=false&amp;showPrivacyPolicy=false&amp;showConnectLegalAge=false&amp;locationPromptShown=false&amp;showPassword=true&amp;useCustomHeader=false&amp;mfaRequired=false&amp;performMFACheck=false&amp;permanentMFA=false&amp;rememberMyBrowserShown=false&amp;rememberMyBrowserChecked=false" style="">
+        <input type="hidden" id="contextPath" value="/sso" style="">
+
+        <div id="login-component" class="blueForm-basic">
+            <div id="login-state-verifymfa">
+                
+                    
+                    <span>Code sent to <b>ro*@cyberjunky.nl</b></span>
+                
+                <form id="submit-mfa-verification-code-form" name="submit-mfa-verification-code-form" method="post" novalidate="novalidate">
+                    <div class="blueForm-v2">
+                        <div class="form-alert">
+                            <div id="genericError" class="error" hidden="">An unexpected error has occurred.</div>
+                            <div id="codeSentAttention" class="attention" hidden="">A new code has been sent. You can request another code in 30 seconds.</div>
+                            
+                            
+                            <div id="maxLimit" class="error" hidden="hidden">You have reached the maximum amount of codes requested. Please use a code you've received or wait 24 hours and try again.</div>
+                            
+                        </div>
+                        <div class="formTextField">
+                            <div class="mfaFormLabel">
+                                <label>
+                                    <span>Security code</span>
+                                    <br>
+                                    <input type="number" pattern="[0-9]*" inputmode="numeric" maxlength="6" id="mfa-code" name="mfa-code" autofocus="" oninput="validateMfaCodeAndPrivacyConsents()" style="">
+                                </label>
+                            </div>
+                        </div>
+                        <br><br>
+                        <div>
+                            <a href="https://support.garmin.com/en-US/?faq=uGHS8ZqOIhA0usBzBMdJu7" target="_blank" id="havingTrouble">Get help</a><br>
+                        </div>
+                        <div id="requestNewCodeWrapper" class="requestNewCode">
+                            <a href="#" id="newCode">Request a new code</a>
+                        </div>
+                        <div>
+                            <a href="#" id="differentMethod">Choose a different way to verify</a><br><br>
+                        </div>
+                        
+                        <br>
+                            
+                        <br>
+                        <button type="submit" id="mfa-verification-code-submit" class="btn1" disabled="disabled" style="cursor: not-allowed; opacity: 0.2;">Next</button>
+                    </div>
+                    <input type="hidden" name="embed" value="true" style="">
+                    <input type="hidden" name="_csrf" value="CA92D28CF6947360CB9BFAB15ED3C7484F9E2A6B388C341E4FA64A150BEE0DA18868536A84C74BDA27D833F950FF1F2D0E75" style="">
+                    <input type="hidden" name="fromPage" value="setupEnterMfaCode" style="">
+                    <br>
+                </form>
+            </div>
+            <div class="clearfix"></div> <!-- Ensure that GAuth-component div's height is computed correctly. -->
+        </div>
+    </div>
+    <script type="text/javascript">
+        resizePageOnLoad(jQuery("#GAuth-component").height());
+    </script>
+
+</body></html>

@@ -471,7 +471,7 @@ class Garmin:
             for attempt in range(3):
                 try:
                     prof = self.client.connectapi("/userprofile-service/socialProfile")
-                    if prof and isinstance(prof, dict) and "displayName" in prof:
+                    if prof is not None and isinstance(prof, dict):
                         break
                 except Exception as e:
                     if attempt == 2:
@@ -483,8 +483,8 @@ class Garmin:
             else:
                 raise GarminConnectAuthenticationError("Invalid profile data found")
 
-            self.display_name = prof.get("displayName")
-            self.full_name = prof.get("fullName")
+            self.display_name = prof.get("displayName", self.username)
+            self.full_name = prof.get("fullName", "")
 
             settings = None
             for attempt in range(3):

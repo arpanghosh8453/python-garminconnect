@@ -1,0 +1,16 @@
+<html><head>
+	    <title>GAuth Embedded Version</title>
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge;">
+	    <style type="text/css">
+	    	#gauth-widget {border: none !important;}
+	    </style>
+	</head>
+	<body>
+		<script type="text/javascript" src="/sso/js/jquery/3.7.1/jquery.min.js?20210319"></script>
+
+
+
+{serviceUrl: 'https://sso.garmin.com/sso/embed', serviceTicket: 'ST-2834731-WZp1sPDTXTpvtHpGVwAc-cas'}
+	
+
+</body></html>
