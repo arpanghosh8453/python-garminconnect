@@ -2,6 +2,8 @@
 your_data/
 pdm.lock
 test_*
+garmin_tokens.json
+*.json.bak
 
 # Virtual environments
 .venv/
